@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 
 namespace Magento\Ups\Test\Unit\Model;
 
@@ -24,7 +26,8 @@ use Magento\Shipping\Model\Simplexml\ElementFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Ups\Helper\Config;
 use Magento\Ups\Model\Carrier;
-use PHPUnit\Framework\MockObject\MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -32,7 +35,7 @@ use Psr\Log\LoggerInterface;
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class CarrierTest extends \PHPUnit\Framework\TestCase
+class CarrierTest extends TestCase
 {
     const FREE_METHOD_NAME = 'free_method';
 
@@ -196,7 +199,7 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
             'carriers/ups/access_license_number' => 'acn',
         ];
 
-        return isset($pathMap[$path]) ? $pathMap[$path] : null;
+        return $pathMap[$path] ?? null;
     }
 
     /**
@@ -223,7 +226,7 @@ class CarrierTest extends \PHPUnit\Framework\TestCase
             ->willReturn($freeShippingEnabled);
 
         $request = new RateRequest();
-        $request->setBaseSubtotalInclTax($requestSubtotal);
+        $request->setValueWithDiscount($requestSubtotal);
         $this->model->setRawRequest($request);
         $price = $this->model->getMethodPrice($cost, $shippingMethod);
         $this->assertEquals($expectedPrice, $price);
